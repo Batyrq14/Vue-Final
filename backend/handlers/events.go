@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/unievents/backend/models"
 )
 
@@ -35,4 +36,27 @@ func GetEvents(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(events)
+}
+
+// GetEventByID returns a single event by ID
+func GetEventByID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var event models.Event
+	err := DB.QueryRow("SELECT id, title, date, description FROM events WHERE id = $1", id).
+		Scan(&event.ID, &event.Title, &event.Date, &event.Description)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			http.Error(w, "Event not found", http.StatusNotFound)
+		} else {
+			log.Printf("Error fetching event: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(event)
 }

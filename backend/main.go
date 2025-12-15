@@ -50,6 +50,7 @@ func main() {
 
 	// Register routes
 	router.HandleFunc("/api/events", appHandlers.GetEvents).Methods("GET")
+	router.HandleFunc("/api/events/{id}", appHandlers.GetEventByID).Methods("GET")
 
 	// Get port from environment
 	port := os.Getenv("PORT")
