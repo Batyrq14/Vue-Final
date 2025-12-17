@@ -5,9 +5,14 @@
       <p>Discover what’s happening on campus</p>
     </header>
 
-    <router-view />
+    <!-- <router-view /> -->
+    <EventsDashboard />
   </main>
 </template>
+
+<script setup>
+import EventsDashboard from './views/EventsDashboard.vue'
+</script>
 
 <style>
 .app {
