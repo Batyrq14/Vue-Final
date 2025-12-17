@@ -8,6 +8,15 @@ CREATE TABLE IF NOT EXISTS events (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create RSVPs table
+CREATE TABLE IF NOT EXISTS rsvps (
+    id SERIAL PRIMARY KEY,
+    event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    user_email VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(event_id, user_email)
+);
+
 -- Insert sample event data
 INSERT INTO events (title, date, description, location) VALUES
 ('Welcome Week Kickoff', '2025-01-15 18:00:00', 'Join us for the official start of Welcome Week! Meet new students, enjoy free food, and learn about campus resources.', 'Student Union Building'),

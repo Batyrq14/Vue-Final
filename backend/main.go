@@ -52,6 +52,12 @@ func main() {
 	router.HandleFunc("/api/events", appHandlers.GetEvents).Methods("GET")
 	router.HandleFunc("/api/events/{id}", appHandlers.GetEventByID).Methods("GET")
 
+	// RSVP routes
+	router.HandleFunc("/api/events/{id}/rsvp", appHandlers.CreateRSVP).Methods("POST")
+	router.HandleFunc("/api/events/{id}/rsvp", appHandlers.DeleteRSVP).Methods("DELETE")
+	router.HandleFunc("/api/events/{id}/rsvp/count", appHandlers.GetRSVPCount).Methods("GET")
+	router.HandleFunc("/api/events/{id}/rsvp/check", appHandlers.CheckUserRSVP).Methods("GET")
+
 	// Get port from environment
 	port := os.Getenv("PORT")
 	if port == "" {
