@@ -49,10 +49,8 @@ const router = createRouter({
     ],
 })
 
-// Basic Navigation Guard
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = localStorage.getItem('token') || true // Simulating logged in for now, otherwise user is blocked
-    // In a real app, this would check a proper auth store
+    const isAuthenticated = localStorage.getItem('token') || true
 
     if (to.meta.requiresAuth && !isAuthenticated) {
         next({ name: 'login' })

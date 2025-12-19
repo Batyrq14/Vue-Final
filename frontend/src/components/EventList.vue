@@ -1,12 +1,14 @@
 <template>
   <div class="grid">
-    <EventCard
-      v-for="event in events"
-      :key="event.id"
-      v-bind="event"
-      @click="goToDetails(event.id)"
-      @join="join(event.id)"
-    />
+    <TransitionGroup name="list" tag="div" class="grid-layout">
+      <EventCard
+        v-for="event in events"
+        :key="event.id"
+        v-bind="event"
+        @click="goToDetails(event.id)"
+        @join="join(event.id)"
+      />
+    </TransitionGroup>
   </div>
 </template>
 
@@ -30,9 +32,29 @@ function join(id) {
 </script>
 
 <style scoped>
-.grid {
+.grid-layout {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 28px;
+  width: 100%;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-leave-active {
+  position: absolute;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.list-move {
+  transition: transform 0.5s ease;
 }
 </style>

@@ -32,10 +32,22 @@
           </div>
           
           <div class="filter-group">
+            <label>Category</label>
+            <select v-model="categoryFilter" class="input-field">
+              <option value="all">All Categories</option>
+              <option value="Academic">Academic</option>
+              <option value="Social">Social</option>
+              <option value="Career">Career</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
             <label>Sort By</label>
             <select v-model="sortBy" class="input-field">
-              <option value="date">Date</option>
+              <option value="date">Date (Oldest First)</option>
+              <option value="date-desc">Date (Newest First)</option>
               <option value="title">Title (A-Z)</option>
+              <option value="title-desc">Title (Z-A)</option>
             </select>
           </div>
         </div>
@@ -95,6 +107,7 @@ const { events, loading, error } = storeToRefs(eventStore)
 // Search & Filter state
 const searchQuery = ref('')
 const dateFilter = ref('all') 
+const categoryFilter = ref('all')
 const sortBy = ref('date') 
 const showScrollBtn = ref(false)
 
@@ -124,6 +137,7 @@ const filteredEvents = computed(() => {
     )
   }
 
+  // Date filter
   const now = new Date()
   if (dateFilter.value === 'upcoming') {
     result = result.filter(event => new Date(event.date) >= now)
@@ -131,13 +145,24 @@ const filteredEvents = computed(() => {
     result = result.filter(event => new Date(event.date) < now)
   }
 
-  if (sortBy.value === 'date') {
-    result.sort((a, b) => new Date(a.date) - new Date(b.date))
-  } else if (sortBy.value === 'title') {
-    result.sort((a, b) => a.title.localeCompare(b.title))
+  // Category filter
+  if (categoryFilter.value !== 'all') {
+    result = result.filter(event => event.category === categoryFilter.value)
   }
 
-  return result
+  // Sort
+  const sorted = [...result]
+  if (sortBy.value === 'date') {
+    sorted.sort((a, b) => new Date(a.date) - new Date(b.date))
+  } else if (sortBy.value === 'date-desc') {
+    sorted.sort((a, b) => new Date(b.date) - new Date(a.date))
+  } else if (sortBy.value === 'title') {
+    sorted.sort((a, b) => a.title.localeCompare(b.title))
+  } else if (sortBy.value === 'title-desc') {
+    sorted.sort((a, b) => b.title.localeCompare(a.title))
+  }
+
+  return sorted
 })
 
 onMounted(() => {

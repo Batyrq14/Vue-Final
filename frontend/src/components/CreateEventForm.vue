@@ -16,6 +16,13 @@
       class="input-field" 
       :class="{ 'input-error': organizerEmail && !isEmailValid }" 
     />
+
+    <select v-model="category" class="input-field">
+      <option value="" disabled selected>Select Category</option>
+      <option value="Academic">Academic</option>
+      <option value="Social">Social</option>
+      <option value="Career">Career</option>
+    </select>
     
     <Transition name="fade">
         <span v-if="error" class="error-text block">{{ error }}</span>
@@ -40,13 +47,14 @@ const title = ref('')
 const date = ref('')
 const description = ref('')
 const organizerEmail = ref('')
+const category = ref('')
 const error = ref('')
 const success = ref('')
 
 // Computed Validation (Advanced Reactivity)
 const isTitleValid = computed(() => title.value.length >= 3)
 const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(organizerEmail.value))
-const isValid = computed(() => isTitleValid.value && isEmailValid.value && date.value && description.value)
+const isValid = computed(() => isTitleValid.value && isEmailValid.value && date.value && description.value && category.value)
 
 // Watch for error to auto-dismiss (Advanced Reactivity)
 watch(error, (newVal) => {
@@ -73,7 +81,8 @@ async function submit() {
         title: title.value,
         date: date.value,
         description: description.value,
-        organizerEmail: organizerEmail.value
+        organizerEmail: organizerEmail.value,
+        category: category.value
     }
 
     const result = await store.addEvent(newEvent)
@@ -83,6 +92,7 @@ async function submit() {
         date.value = ''
         description.value = ''
         organizerEmail.value = ''
+        category.value = ''
     } else {
         error.value = 'Failed to create event.'
     }

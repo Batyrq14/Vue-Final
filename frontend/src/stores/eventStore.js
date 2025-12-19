@@ -55,11 +55,11 @@ export const useEventStore = defineStore('event', () => {
 
             // Mock Data Fallback for Examiner
             const mockEvents = [
-                { id: 1, title: 'Annual Tech Symposium', description: 'Join us for a day of innovation and networking.', date: '2025-10-15', location: 'Main Hall' },
-                { id: 2, title: 'Campus Music Fest', description: 'Live performances from local student bands.', date: '2025-11-20', location: 'Student Union' },
-                { id: 3, title: 'Graduate Career Fair', description: 'Meet with top recruiters from industry leaders.', date: '2025-09-30', location: 'Gymnasium' },
-                { id: 4, title: 'Chess Championship', description: 'Test your strategy in our annual tournament.', date: '2025-10-05', location: 'Library' },
-                { id: 5, title: 'Outdoor Movie Night', description: 'Watch the latest blockbusters under the stars.', date: '2025-08-22', location: 'Central Park' }
+                { id: 1, title: 'Annual Tech Symposium', description: 'Join us for a day of innovation and networking.', date: '2025-10-15', location: 'Main Hall', category: 'Academic' },
+                { id: 2, title: 'Campus Music Fest', description: 'Live performances from local student bands.', date: '2025-11-20', location: 'Student Union', category: 'Social' },
+                { id: 3, title: 'Graduate Career Fair', description: 'Meet with top recruiters from industry leaders.', date: '2025-09-30', location: 'Gymnasium', category: 'Career' },
+                { id: 4, title: 'Chess Championship', description: 'Test your strategy in our annual tournament.', date: '2025-10-05', location: 'Library', category: 'Social' },
+                { id: 5, title: 'Outdoor Movie Night', description: 'Watch the latest blockbusters under the stars.', date: '2025-08-22', location: 'Central Park', category: 'Social' }
             ]
 
             const colorPalettes = [
