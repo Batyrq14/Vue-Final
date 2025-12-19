@@ -175,7 +175,8 @@ onUnmounted(() => {
     background-color: var(--primary-700);
 }
 
-<style scoped>
+
+
 .dashboard {
   display: flex;
   flex-direction: column;
