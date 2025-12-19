@@ -16,7 +16,7 @@ const user = computed(() => auth.user || { name: 'Guest', email: 'guest@unievent
     <!-- Stats Cards -->
     <div class="stats-grid">
       <div class="stat-card blue">
-        <h3 class="stat-label">Total RSVP's</h3>
+        <h3 class="stat-label">Attending</h3>
         <p class="stat-value">12</p>
       </div>
       <div class="stat-card purple">

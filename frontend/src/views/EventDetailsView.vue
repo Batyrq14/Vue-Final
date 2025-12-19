@@ -36,12 +36,11 @@
           <p>{{ event.description }}</p>
         </div>
         
-        <!-- RSVP Count -->
-        <div class="rsvp-status">
+        <div class="attendance-status">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
-          <span class="meta-text"><strong>{{ rsvpCount }}</strong> {{ rsvpCount === 1 ? 'person' : 'people' }} attending</span>
+          <span class="meta-text"><strong>{{ rsvpCount }}</strong> {{ rsvpCount === 1 ? 'person' : 'people' }} going</span>
         </div>
         
         <div class="event-actions">
@@ -59,7 +58,7 @@
             :class="{ 'btn-danger': isRSVPed }"
           >
             <span v-if="rsvpLoading">Processing...</span>
-            <span v-else>{{ isRSVPed ? 'Cancel RSVP' : 'RSVP Now' }}</span>
+            <span v-else>{{ isRSVPed ? 'Cancel Attendance' : 'Join Event' }}</span>
           </button>
         </div>
       </div>
@@ -103,65 +102,84 @@ const fetchEvent = async () => {
 // Fetch RSVP count
 const fetchRSVPCount = async () => {
   try {
-    const response = await fetch(`http://localhost:8083/api/events/${route.params.id}/rsvp/count`)
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8083/api'
+    const response = await fetch(`${apiUrl}/events/${route.params.id}/rsvp/count`)
     if (response.ok) {
       const data = await response.json()
       rsvpCount.value = data.count
     }
   } catch (err) {
-    console.error('Error fetching RSVP count:', err)
+    console.warn('Error fetching attendance count (Mock mode active)')
   }
 }
 
 // Check if user has RSVPed
 const checkUserRSVP = async () => {
   try {
-    const response = await fetch(`http://localhost:8083/api/events/${route.params.id}/rsvp/check?email=${encodeURIComponent(userEmail.value)}`)
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8083/api'
+    const response = await fetch(`${apiUrl}/events/${route.params.id}/rsvp/check?email=${encodeURIComponent(userEmail.value)}`)
     if (response.ok) {
       const data = await response.json()
       isRSVPed.value = data.is_rsvped
     }
   } catch (err) {
-    console.error('Error checking RSVP status:', err)
+    console.warn('Error checking attendance status (Mock mode active)')
   }
 }
 
-// Handle RSVP
+// Handle Join/Cancel
 const handleRSVP = async () => {
   rsvpLoading.value = true
   try {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8083/api'
+    const isMockMode = !import.meta.env.VITE_API_URL
+
     if (isRSVPed.value) {
-      const response = await fetch(`http://localhost:8083/api/events/${route.params.id}/rsvp`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_email: userEmail.value })
-      })
-      if (response.ok) {
+      if (isMockMode) {
+        // Mock Success
         isRSVPed.value = false
-        await fetchRSVPCount()
-        alert('✅ RSVP cancelled successfully!')
+        rsvpCount.value = Math.max(0, rsvpCount.value - 1)
+        alert('Attendance cancelled successfully!')
       } else {
-        const errorText = await response.text()
-        alert(`❌ Failed to cancel RSVP: ${errorText}`)
+        const response = await fetch(`${apiUrl}/events/${route.params.id}/rsvp`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_email: userEmail.value })
+        })
+        if (response.ok) {
+          isRSVPed.value = false
+          await fetchRSVPCount()
+          alert('Attendance cancelled successfully!')
+        } else {
+          const errorText = await response.text()
+          alert(`Failed to cancel: ${errorText}`)
+        }
       }
     } else {
-      const response = await fetch(`http://localhost:8083/api/events/${route.params.id}/rsvp`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_email: userEmail.value })
-      })
-      if (response.ok) {
+      if (isMockMode) {
+        // Mock Success
         isRSVPed.value = true
-        await fetchRSVPCount()
-        alert('🎉 RSVP successful! See you at the event!')
+        rsvpCount.value++
+        alert('Joined successfully! See you at the event!')
       } else {
-        const errorText = await response.text()
-        alert(`❌ ${errorText}`)
+        const response = await fetch(`${apiUrl}/events/${route.params.id}/rsvp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_email: userEmail.value })
+        })
+        if (response.ok) {
+          isRSVPed.value = true
+          await fetchRSVPCount()
+          alert('Joined successfully! See you at the event!')
+        } else {
+          const errorText = await response.text()
+          alert(errorText)
+        }
       }
     }
   } catch (err) {
-    console.error('Error handling RSVP:', err)
-    alert('❌ An error occurred. Please try again.')
+    console.error('Error handling attendance:', err)
+    alert('An error occurred. Please try again.')
   } finally {
     rsvpLoading.value = false
   }
@@ -257,7 +275,7 @@ onMounted(async () => {
   margin-bottom: var(--spacing-8);
 }
 
-.rsvp-status {
+.attendance-status {
   background-color: var(--gray-50);
   padding: var(--spacing-4);
   border-radius: var(--radius-lg);

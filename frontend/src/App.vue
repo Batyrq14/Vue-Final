@@ -3,7 +3,7 @@
     <header class="app-header">
       <div class="container flex justify-between items-center">
         <div class="brand">
-           <h1 class="brand-title">🎓 UniEvents</h1>
+           <h1 class="brand-title">UniEvents</h1>
            <p class="brand-subtitle">Discover what’s happening on campus</p>
         </div>
         <nav class="nav-bar">

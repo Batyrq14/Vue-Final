@@ -1,6 +1,6 @@
 <template>
   <form class="form card" @submit.prevent="submit">
-    <h2>➕ Create New Event</h2>
+    <h2>Create New Event</h2>
 
     <input 
       v-model="title" 
