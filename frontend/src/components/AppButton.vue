@@ -21,8 +21,9 @@ defineProps({
   padding: 12px;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
-  color: white;
+  border: none;
+  background-color: var(--primary-600);
+  color: var(--white);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;

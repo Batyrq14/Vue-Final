@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card cursor-pointer" @click="$emit('click')">
     <div class="image-wrapper">
       <img :src="image" alt="event image" />
       <span v-if="isFull" class="badge">Sold Out</span>
@@ -9,7 +9,7 @@
       <h3>{{ title }}</h3>
       <p>{{ date }}</p>
 
-      <AppButton :disabled="isFull" @click="$emit('join')">
+      <AppButton :disabled="isFull" @click.stop="$emit('join')">
         Join Event
       </AppButton>
     </div>
@@ -29,52 +29,56 @@ defineProps({
 
 <style scoped>
 .card {
-  background: white;
-  border-radius: 16px;
+  background: var(--white);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-xl);
 }
 
 .image-wrapper {
   position: relative;
+  height: 200px;
 }
 
 img {
   width: 100%;
-  height: 180px;
+  height: 100%;
   object-fit: cover;
 }
 
 .content {
-  padding: 18px;
+  padding: var(--spacing-6);
 }
 
 .content h3 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 6px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-2);
+  color: var(--gray-900);
 }
 
 .content p {
-  color: #64748b;
-  margin-bottom: 14px;
+  color: var(--gray-500);
+  margin-bottom: var(--spacing-4);
+  font-size: 0.95rem;
 }
 
 .badge {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: #dc2626;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 12px;
+  background: var(--danger);
+  color: var(--white);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
   font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 </style>
